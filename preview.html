@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>UnibenPlug - Buy, Sell, Find Around UNIBEN</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#fff;--card:#fff;--ink:#111827;--mute:#6B7280;--line:#E5E7EB;--field:#F5F5F5;--g:#4B0E4B;--gd:#4B0E4B;--gl:#F3E8FF;--warn:#c2410c;--warnbg:#ffedd5;--gold:#a16207;--goldbg:#fef3c7;--mapbg:#F3EEF5;--road:#fff;
+color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{background:#fff;scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 Figtree,system-ui,sans-serif}
+h1,h2,h3{font-family:'Bricolage Grotesque',Figtree,system-ui,sans-serif;margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:0 14px 90px}
+header{display:flex;align-items:center;justify-content:space-between;padding:14px 0 8px}
+.logo{font:800 24px 'Bricolage Grotesque',sans-serif;color:var(--g);letter-spacing:-.5px}
+.who{font-size:13px;color:var(--mute)}
+.bar{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bar .full{grid-column:1/-1}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--field)}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--g);outline-offset:2px}
+.seg{display:flex;gap:6px}
+.seg button{flex:1;padding:10px;border:1px solid var(--line);background:var(--card);border-radius:10px;font-weight:600;cursor:pointer}
+.seg button.on{background:var(--g);border-color:var(--g);color:#fff}
+.chk{color:var(--ink);display:flex;align-items:center;gap:8px;font-size:14px}
+.chk input{width:auto}
+#map{position:relative;height:420px;margin:12px 0;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:var(--mapbg)}
+#map svg{position:absolute;inset:0;width:100%;height:100%}
+.pin{position:absolute;transform:translate(-50%,-100%);border:0;background:none;cursor:pointer;padding:0;font-size:12px;font-weight:700}
+.pin span{display:block;background:var(--g);color:#fff;border-radius:999px;padding:3px 8px;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.pin.need span{background:#9333EA}
+.pin.hl span{outline:3px solid var(--ink)}
+.pin.me{transform:translate(-50%,-50%);cursor:default}
+.pin.me span{background:var(--ink);color:var(--bg)}
+.card{background:var(--card);border:1px solid var(--line);box-shadow:0 1px 3px rgba(17,24,39,.08);border-radius:14px;padding:12px;margin-bottom:10px;display:grid;grid-template-columns:76px 1fr;gap:12px}
+.card.hl{border-color:var(--g);box-shadow:0 0 0 2px var(--g)}
+.img{width:76px;height:76px;border-radius:10px;background:var(--gl);display:grid;place-items:center;font-size:34px}
+.card h3{font-size:17px;line-height:1.2}
+.price{font-weight:800;color:var(--gd);font-size:17px}
+.meta{font-size:13px;color:var(--mute)}
+.badges{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0}
+.b{font-size:12px;font-weight:600;border-radius:6px;padding:2px 6px;background:var(--gl);color:var(--gd)}
+.b.f,.b.bo{background:var(--goldbg);color:var(--gold)}
+.b.u{background:var(--warnbg);color:var(--warn)}
+.b.n{background:#EDE9FE;color:#6D28D9}
+.acts{grid-column:1/-1;display:flex;gap:8px;align-items:center}
+.wa{flex:1;text-align:center;background:var(--g);color:#fff;text-decoration:none;padding:10px;border-radius:10px;font-weight:600}
+.ghost{border:1px solid var(--line);background:none;border-radius:10px;padding:9px 12px;cursor:pointer;font-weight:600}
+.ghost.gold{border-color:var(--gold);color:var(--gold)}
+.fab{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));background:var(--g);color:#fff;border:0;border-radius:999px;padding:14px 20px;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.3);cursor:pointer}
+.empty{text-align:center;color:var(--mute);padding:26px 10px}
+dialog{border:0;border-radius:16px;padding:18px;width:min(440px,94vw);background:var(--card);color:var(--ink)}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+dialog h2{font-size:21px;margin-bottom:10px}
+label{display:block;font-size:14px;font-weight:500;color:var(--mute);margin:10px 0 4px}
+.row{display:flex;gap:8px;margin-top:14px}
+.row button{flex:1}
+.pri{background:var(--g);color:#fff;border:0;border-radius:10px;padding:12px;font-weight:700;cursor:pointer}
+.plan{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:12px;margin-bottom:8px;cursor:pointer}
+.plan.rec{border:2px solid var(--g)}
+.plan b{font-size:18px}
+.msg{padding:10px;border-radius:10px;margin-top:10px;font-size:14px}
+.msg.ok{background:var(--gl);color:var(--gd)}
+.msg.bad{background:var(--warnbg);color:var(--warn)}
+.bank{background:var(--gl);border-radius:10px;padding:10px;font-size:14px}
+.hide{display:none!important}.tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:10px}.tabs .ghost{white-space:nowrap}.pol li{margin-bottom:8px}.note{font-size:12px;color:var(--mute);margin-top:18px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="logo">UnibenPlug</div><div class="who" id="who">Browsing as guest</div></header>
+
+<div class="seg" id="nav" style="margin-bottom:10px"><button class="on" data-v="browse">Browse</button><button data-v="mine">My posts</button><button data-v="admin">Admin</button><button data-v="policy">Policy</button></div>
+<section id="vBrowse">
+<div class="bar">
+  <select id="campus" class="full" aria-label="Campus"></select>
+  <input id="q" class="full" type="search" placeholder="Search food, braids, laptops, rooms..." aria-label="Search">
+  <div class="seg full" id="type"><button class="on" data-t="ALL">All</button><button data-t="SELL">Sell</button><button data-t="NEED">Need</button></div>
+  <select id="cat" aria-label="Category"></select>
+  <label class="chk"><input type="checkbox" id="ver">Verified only</label>
+</div>
+
+<div class="seg" id="mv" style="margin:12px 0"><button class="on" data-m="list">List</button><button data-m="map">Map</button></div>
+<div id="map" aria-label="Map of posts" class="hide"></div>
+<div id="list"></div>
+</section>
+<section id="vMine" class="hide"></section>
+<section id="vAdmin" class="hide"></section>
+<section id="vPolicy" class="hide"><h2 style="margin-bottom:10px">Community Policy</h2>
+<p>UnibenPlug is for students to buy, sell and get help near campus. By posting you agree to these rules.</p>
+<p>No fraud, no illegal items, no adult content, no spam. All listings must have real photos and real prices. Violators will be removed without refund. Every post needs a real price and the right category.</p>
+<p>Posts that break these rules are removed automatically. Three removed posts ban your account. Posts reported three times are hidden until an admin reviews them. New sellers have their first two posts reviewed by an admin.</p></section>
+<p class="note">Prototype: posts live in this page only. The live app connects to Supabase.</p>
+</div>
+<button class="fab" id="postBtn">+ Post Now</button>
+
+<dialog id="dSign"><h2>Create your account</h2>
+<label>Full name<input id="sName"></label>
+<label>Phone<input id="sPhone" type="tel"></label>
+<label>Password<input id="sPass" type="password"></label>
+<label>WhatsApp number<input id="sWa" type="tel" placeholder="2348012345678"></label>
+<label>Campus<select id="sCampus"></select></label>
+<div id="sMsg"></div>
+<div class="row"><button class="ghost" data-close>Cancel</button><button class="pri" id="sGo">Sign up and post</button></div></dialog>
+
+<dialog id="dPost"><h2>New post</h2>
+<div class="seg" id="pType"><button class="on" data-t="SELL">What I sell</button><button data-t="NEED">What I need</button></div>
+<label>Title<input id="pTitle" maxlength="70"></label>
+<label>Description<textarea id="pDesc" rows="2"></textarea></label>
+<label>Price (required)<input id="pPrice" placeholder="e.g. N2,500 or Negotiable"></label>
+<label>Category<select id="pCat"></select></label>
+<label>Area<input id="pArea" placeholder="e.g. Hall 6, Ekosodin"></label>
+<label>Photo<input type="file" accept="image/*" id="pImg"></label>
+<label class="chk" id="urgRow" hidden><input type="checkbox" id="pUrg">Mark as urgent 🔥 Need today (free 2h top)</label>
+<label class="chk"><input type="checkbox" id="pPol">I agree: No fraud, no illegal items, no adult content, no spam. All listings must have real photos and real prices. Violators will be removed without refund.</label>
+<div id="pMsg"></div>
+<div class="row"><button class="ghost" data-close>Cancel</button><button class="pri" id="pGo">Post Now</button></div></dialog>
+
+
+<dialog id="dRep"><h2>Report this post</h2>
+<select id="rWhy"><option>Fraud</option><option>Sexual</option><option>Gambling</option><option>Wrong Category</option><option>Outside Location</option></select>
+<div class="row"><button class="ghost" data-close>Cancel</button><button class="pri" id="rGo">Send report</button></div></dialog>
+
+<script>
+var CAMPUSES=[{slug:'uniben-ugbowo',name:'UNIBEN Ugbowo'},{slug:'uniben-ekehuan',name:'UNIBEN Ekehuan'}];
+var SELLC=['Food & Snacks','Thrift & Fashion','Beauty (Hair, Makeup, Nails, Barbing)','Tech (Phones, Laptops, Data, Graphics)','Printing & Photography','Laundry & Cleaning','Tutor & Assignment Help','Accommodation & Room'];
+var NEEDC=['Beauty Service Needed','Cleaning, Laundry & Errand','Food Delivery Needed','Tutor & School Help Needed','Tech Help Needed','Worker Needed','Accommodation & Roommate Needed','Other Help (write anything)'];
+var BAD=['yahoo','olosho','hookup','escort','knack','bet9ja','1xbet','betting','porn','xxx','sex service','viagra','investment double','double your money','bring 5k get 50k','click link to win','forex double'];
+var ICON={'Food':'🍲','Thrift':'👕','Beauty':'💅','Tech':'💻','Print':'📷','Laundry':'🧺','Tutor':'📚','Accom':'🏠'};
+var S={campus:'uniben-ugbowo',t:'ALL',cat:'',q:'',ver:false,hl:null,slots:63,user:null,posts:[],nid:100,target:null};
+var H=3600000,NOW=Date.now();
+function P(id,c,t,title,price,cat,area,x,y,o){return Object.assign({id:id,campus:c,type:t,title:title,price:price,cat:cat,area:area,x:x,y:y,views:20,rating:0,rn:0,ver:0,urgent:0,status:'approved',reports:0,mine:0,phone:'2348000000000',age:2,left:24},o||{})}
+S.posts=[
+P(1,'uniben-ugbowo','SELL','Jollof rice and chicken, delivered to hostels','N1,500',SELLC[0],'Hall 6',30,45,{views:142,rating:4.8,rn:12,ver:1,age:1,left:300}),
+P(2,'uniben-ugbowo','SELL','Braids and knotless, home service','N8,000',SELLC[2],'Ekosodin',62,30,{views:88,rating:4.6,rn:9,ver:1,age:3,left:60}),
+P(3,'uniben-ugbowo','NEED','Need someone to fix my laptop screen today','Negotiable',NEEDC[4],'Faculty of Engineering',48,66,{views:31,urgent:1,age:0,left:2}),
+P(4,'uniben-ugbowo','SELL','Thrift jeans and tops, size M to XL','N3,000',SELLC[1],'Main gate',75,58,{views:54,rating:4.2,rn:5,age:5,left:20}),
+P(5,'uniben-ugbowo','NEED','Roommate needed, self-contain near school','N120,000/yr',NEEDC[6],'Ekosodin',20,72,{views:19,age:8,left:16}),
+P(6,'uniben-ugbowo','SELL','Printing, binding and passport photos','N100/page',SELLC[4],'Library road',52,22,{views:40,ver:1,age:6,left:18}),
+P(7,'uniben-ekehuan','SELL','Cheap data plans and airtime','N1,000',SELLC[3],'Ekehuan gate',40,40,{views:27,age:4,left:20}),
+P(8,'uniben-ekehuan','NEED','Need laundry done weekly','N2,500',NEEDC[1],'Ekehuan hostel',66,55,{views:12,age:9,left:15}),
+P(9,'uniben-ugbowo','SELL','Fresh zobo drinks, 500ml bottles','N300',SELLC[0],'Hall 3',35,25,{status:'pending_review',views:0,age:0,left:24})];
+S.posts[3].reports=2;S.mv='list';S.view='browse';S.tab='Pending';S.deleted=[];
+S.users=[{n:'Ada O.',ids:[1,2],v:1,b:0},{n:'Chidi E.',ids:[3,4],v:0,b:0},{n:'Ngozi A.',ids:[6],v:1,b:0},{n:'Ekene U.',ids:[5,7,8,9],v:0,b:0}];
+
+function $(i){return document.getElementById(i)}
+function iconFor(c){for(var k in ICON){if(c.indexOf(k)===0)return ICON[k]}return '🛍️'}
+function ago(a){return a<1?'just now':a+'h ago'}
+function left(h){return h>=48?Math.round(h/24)+' days left':h+'h left'}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+
+function fill(sel,arr,first){sel.innerHTML=(first?'<option value="">'+first+'</option>':'')+arr.map(function(a){return '<option>'+a+'</option>'}).join('')}
+function init(){
+  $('campus').innerHTML=CAMPUSES.map(function(c){return '<option value="'+c.slug+'">'+c.name+'</option>'}).join('');
+  $('sCampus').innerHTML=$('campus').innerHTML;
+  fill($('cat'),SELLC.concat(NEEDC),'All categories');
+    render();
+}
+function visible(){
+  var q=S.q.toLowerCase();
+  var out=S.posts.filter(function(p){
+    if(p.campus!==S.campus)return false;
+    if(p.status==='pending_review'&&!p.mine)return false;
+    if(p.status==='hidden'||p.status==='auto_deleted')return false;
+    if(S.t!=='ALL'&&p.type!==S.t)return false;
+    if(S.cat&&p.cat!==S.cat)return false;
+    if(S.ver&&!p.ver)return false;
+    if(q&&(p.title+p.cat+p.area).toLowerCase().indexOf(q)<0)return false;
+    return true});
+  return out.sort(function(a,b){return (b.urgent-a.urgent)||(a.age-b.age)});
+}
+function render(){
+  $('map').classList.toggle('hide',S.mv!=='map');$('list').classList.toggle('hide',S.mv==='map');
+  var list=visible(),c=CAMPUSES.filter(function(x){return x.slug===S.campus})[0];
+  var m='<svg viewBox="0 0 320 190" preserveAspectRatio="none"><g stroke="var(--road)" stroke-width="9" fill="none"><path d="M0 60 L320 90"/><path d="M110 0 L150 190"/><path d="M0 150 L320 130"/><path d="M240 0 L215 190"/></g></svg>';
+  m+='<div class="pin me" style="left:50%;top:50%"><span>'+esc(c.name)+'</span></div>';
+  list.forEach(function(p){m+='<button class="pin '+(p.type==='NEED'?'need ':'')+(S.hl===p.id?'hl':'')+'" style="left:'+p.x+'%;top:'+p.y+'%" data-id="'+p.id+'" aria-label="'+esc(p.title)+'"><span>'+(p.type==='NEED'?'Need ':'')+esc(p.price.length>10?'Post':p.price)+'</span></button>'});
+  $('map').innerHTML=m;
+  if(!list.length){$('list').innerHTML='<div class="empty">No posts match yet. Be the first to post here.</div>';return}
+  $('list').innerHTML=list.map(function(p){
+    var b='';
+            if(p.urgent)b+='<span class="b u">🔥 URGENT</span>';
+    if(p.ver)b+='<span class="b">✅ Verified</span>';
+    b+='<span class="b '+(p.type==='NEED'?'n':'')+'">'+(p.type==='NEED'?'Need':'Sell')+'</span>';
+    if(p.status==='pending_review')b+='<span class="b u">Pending review</span>';
+    var wa='https://wa.me/'+p.phone+'?text='+encodeURIComponent('Hi I saw your post on UnibenPlug: '+p.title);
+    return '<article class="card'+(S.hl===p.id?' hl':'')+'" data-id="'+p.id+'"><div class="img">'+iconFor(p.cat)+'</div><div><h3>'+esc(p.title)+'</h3><div class="price">'+esc(p.price)+'</div><div class="badges">'+b+'</div><div class="meta">'+esc(p.area)+' · 👁️ '+p.views+' views'+(p.rn?' · ⭐ '+p.rating+' ('+p.rn+')':'')+' · '+left(p.left)+'</div></div><div class="acts"><a class="wa" href="'+wa+'" target="_blank" rel="noopener">WhatsApp</a>'+(p.mine?'':'<button class="ghost" data-rep="'+p.id+'">Report</button>')+'</div></article>'}).join('');
+}
+function view(id){var p=S.posts.filter(function(x){return x.id===id})[0];if(p&&!p.mine&&!p.seen){p.seen=1;p.views++}S.hl=id;render()}
+
+$('campus').onchange=function(){S.campus=this.value;S.hl=null;render()};
+$('q').oninput=function(){S.q=this.value;render()};
+$('cat').onchange=function(){S.cat=this.value;render()};
+$('ver').onchange=function(){S.ver=this.checked;render()};
+$('type').onclick=function(e){var t=e.target.dataset.t;if(!t)return;S.t=t;[].forEach.call(this.children,function(b){b.classList.toggle('on',b.dataset.t===t)});render()};
+$('map').onclick=function(e){var b=e.target.closest('.pin');if(b&&b.dataset.id){view(+b.dataset.id);var c=document.querySelector('article[data-id="'+b.dataset.id+'"]');if(c)c.scrollIntoView({behavior:'smooth',block:'center'})}};
+$('list').onclick=function(e){
+  var rp=e.target.closest('[data-rep]');
+  if(rp){S.target=+rp.dataset.rep;$('dRep').showModal();return}
+  var c=e.target.closest('article');if(c&&!e.target.closest('a'))view(+c.dataset.id)};
+document.querySelectorAll('[data-close]').forEach(function(b){b.onclick=function(){b.closest('dialog').close()}});
+
+function need(){return $('pType').querySelector('.on').dataset.t==='NEED'}
+$('postBtn').onclick=function(){if(!S.user){$('sMsg').innerHTML='';$('dSign').showModal()}else openPost()};
+function openPost(){$('pMsg').innerHTML='';fill($('pCat'),need()?NEEDC:SELLC);$('urgRow').hidden=!need();$('dPost').showModal()}
+$('sGo').onclick=function(){
+  var n=$('sName').value.trim(),ph=$('sPhone').value.trim(),pw=$('sPass').value,wa=$('sWa').value.trim();
+  if(!n||!ph||pw.length<6||!wa){$('sMsg').innerHTML='<div class="msg bad">Fill every field. Password needs at least 6 characters.</div>';return}
+  S.user={name:n,phone:wa,posts:0};
+    $('who').textContent=n;S.campus=$('sCampus').value;$('campus').value=S.campus;
+  $('dSign').close();openPost();render()};
+$('pType').onclick=function(e){var t=e.target.dataset.t;if(!t)return;[].forEach.call(this.children,function(b){b.classList.toggle('on',b===e.target)});fill($('pCat'),need()?NEEDC:SELLC);$('urgRow').hidden=!need()};
+$('pGo').onclick=function(){
+  var t=$('pTitle').value.trim(),d=$('pDesc').value.trim(),pr=$('pPrice').value.trim(),m=$('pMsg');
+  if(!t||!pr){m.innerHTML='<div class="msg bad">Title and price are required.</div>';return}
+  if(!$('pPol').checked){m.innerHTML='<div class="msg bad">Agree to the Community Policy to publish.</div>';return}
+  var txt=(t+' '+d).toLowerCase();
+  var kw=BAD.filter(function(k){return txt.indexOf(k)>=0})[0];
+  if(kw){S.deleted.push({t:t,r:'Banned keyword: '+kw});m.innerHTML='<div class="msg bad">This post breaks the Community Policy and was auto deleted. Three of these get your account banned.</div>';return}
+  var st=S.user.posts<2?'pending_review':'approved';
+  var p=P(S.nid++,S.campus,need()?'NEED':'SELL',t,pr,$('pCat').value,$('pArea').value||'Campus',20+Math.random()*60,20+Math.random()*60,{views:0,age:0,left:first?720:24,mine:1,status:st,phone:S.user.phone,urgent:need()&&$('pUrg').checked?1:0});
+    S.user.posts++;S.posts.push(p);
+  $('dPost').close();
+  ['pTitle','pDesc','pPrice','pArea'].forEach(function(i){$(i).value=''});$('pPol').checked=false;
+  refresh()};
+
+$('rGo').onclick=function(){
+  var p=S.posts.filter(function(x){return x.id===S.target})[0];
+  if(p){p.reports++;if(p.reports>=3)p.status='hidden'}
+  $('dRep').close();refresh()};
+function refresh(){render();if(S.view==='mine')renderMine();if(S.view==='admin')renderAdmin()}
+$('mv').onclick=function(e){var m=e.target.dataset.m;if(!m)return;S.mv=m;[].forEach.call(this.children,function(b){b.classList.toggle('on',b.dataset.m===m)});render()};
+$('nav').onclick=function(e){var v=e.target.dataset.v;if(!v)return;S.view=v;[].forEach.call(this.children,function(b){b.classList.toggle('on',b.dataset.v===v)});['Browse','Mine','Admin','Policy'].forEach(function(x){$('v'+x).classList.toggle('hide',x.toLowerCase()!==v)});refresh()};
+function renderMine(){
+  if(!S.user){$('vMine').innerHTML='<div class="empty">Tap + Post to sign up, then your posts show here.</div>';return}
+  var l=S.posts.filter(function(p){return p.mine});
+  var st={approved:'Live',pending_review:'Pending review',hidden:'Hidden'};
+  $('vMine').innerHTML=l.length?l.map(function(p){return '<article class="card"><div class="img">'+iconFor(p.cat)+'</div><div><h3>'+esc(p.title)+'</h3><div class="price">'+esc(p.price)+'</div><div class="meta">'+st[p.status]+' · 👁️ '+p.views+' views'+'</div></div><div class="acts"><button class="ghost" data-del="'+p.id+'">Delete</button></div></article>'}).join(''):'<div class="empty">You have no posts yet. Tap + Post to add one.</div>'}
+$('vMine').onclick=function(e){var d=e.target.closest('[data-del]');
+  if(d){S.posts=S.posts.filter(function(p){return p.id!==+d.dataset.del});refresh()}};
+function byId(id){return S.posts.filter(function(p){return p.id===id})[0]}
+function row(t,m,btns){return '<div class="card" style="grid-template-columns:1fr"><div><h3>'+t+'</h3><div class="meta">'+m+'</div></div><div class="acts">'+btns+'</div></div>'}
+function renderAdmin(){
+  var T=['Pending','Auto-Deleted','Reported','Users'],b='';
+  var h='<div class="meta" style="margin-bottom:8px">Demo admin · '+S.posts.length+' posts · '+(S.users.length+(S.user?1:0))+' users · '+S.deleted.length+' auto-deleted</div><div class="tabs">'+T.map(function(t){return '<button class="ghost'+(S.tab===t?' gold':'')+'" data-tab="'+t+'">'+t+'</button>'}).join('')+'</div>';
+  if(S.tab==='Pending')b=S.posts.filter(function(p){return p.status==='pending_review'}).map(function(p){return row(esc(p.title),esc(p.price)+' · '+esc(p.area),'<button class="wa" data-ap="'+p.id+'">Approve</button><button class="ghost" data-dp="'+p.id+'">Delete</button>')}).join('');
+  if(S.tab==='Auto-Deleted')b=S.deleted.map(function(d){return row(esc(d.t),esc(d.r),'')}).join('');
+  if(S.tab==='Reported')b=S.posts.filter(function(p){return p.reports>0}).map(function(p){return row(esc(p.title),p.reports+' reports · '+p.status,'<button class="ghost" data-hp="'+p.id+'">Hide</button><button class="ghost" data-dp="'+p.id+'">Delete</button>')}).join('');
+  if(S.tab==='Users')b=S.users.map(function(u,i){return row(esc(u.n)+(u.v?' ✅':'')+(u.b?' 🚫':''),u.ids.length+' posts','<button class="ghost" data-uv="'+i+'">'+(u.v?'Remove verified':'Mark Verified')+'</button><button class="ghost" data-ub="'+i+'">'+(u.b?'Unban':'Ban')+'</button>')}).join('');
+  $('vAdmin').innerHTML=h+(b||'<div class="empty">Nothing here.</div>')}
+$('vAdmin').onclick=function(e){var d=e.target.closest('button');if(!d)return;var k=d.dataset,p;
+  if(k.tab)S.tab=k.tab;
+  if(k.ap){p=byId(+k.ap);p.status='approved'}
+  if(k.dp)S.posts=S.posts.filter(function(x){return x.id!==+k.dp});
+  if(k.hp)byId(+k.hp).status='hidden';
+  if(k.uv){var u=S.users[+k.uv];u.v=u.v?0:1;u.ids.forEach(function(i){var q=byId(i);if(q)q.ver=u.v})}
+  if(k.ub){var w=S.users[+k.ub];w.b=w.b?0:1;w.ids.forEach(function(i){var q=byId(i);if(q)q.status=w.b?'hidden':'approved'})}
+  refresh()};
+init();
+</script>
+</body>
+</html>
