@@ -4,6 +4,8 @@ import type { Metadata, Viewport } from 'next';
 import { AuthProvider } from '@/lib/auth';
 import Header from '@/components/Header';
 import RatingPrompt from '@/components/RatingPrompt';
+import SetupNotice from '@/components/SetupNotice';
+import { isSupabaseConfigured } from '@/lib/supabase';
 
 export const metadata: Metadata = {
   title: 'UnibenPlug - Buy, Sell, Find Around UNIBEN',
@@ -15,11 +17,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
+        {!isSupabaseConfigured ? (
+          <SetupNotice
+            title="Supabase keys missing"
+            detail="Add NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY and SUPABASE_SERVICE_ROLE_KEY in the Vars settings, then run supabase/schema.sql once."
+          />
+        ) : (
         <AuthProvider>
           <Header />
           {children}
           <RatingPrompt />
         </AuthProvider>
+        )}
       </body>
     </html>
   );
